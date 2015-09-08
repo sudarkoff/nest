@@ -1,0 +1,11 @@
+---
+- name: add to sudoers without password
+  become: yes
+  lineinfile: >
+    dest=/etc/sudoers
+    regexp="{{ item.regexp }}"
+    line="{{ item.line }}"
+    state=present
+    create=true
+  with_items:
+    - { regexp: '^"{{username}}"', line: '"{{username}}" ALL=(ALL) NOPASSWD: ALL' }

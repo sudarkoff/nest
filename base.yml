@@ -1,0 +1,37 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+
+  roles:
+    - osx-defaults
+    - role: computername
+      when: computername is defined
+    - ssh_config
+    - sudoers
+    - git
+    - terminal
+    - homebrew
+    - apps
+
+  vars:
+    - username: "{{ lookup('env', 'USER') }}"
+    - brew_apps:
+      - htop-osx
+      - jq
+    - brew_cask_apps:
+      - alfred
+      - slate
+      - rescuetime
+      - 1password
+      - typinator
+      - slack
+      - google-chrome
+      - evernote
+      - omnifocus
+      - dropbox
+      - spotify
+      - sonos
+      - macvim
+      - kaleidoscope
+      - vagrant
+      - virtualbox
