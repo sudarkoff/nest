@@ -64,7 +64,6 @@ function install_clt {
 
 setStatusMessage "Checking if we need to ask for a sudo password"
 sudo -v
-export ANSIBLE_ASK_SUDO_PASS=True
 
 setStatusMessage "Keep-alive: update existing sudo time stamp until we are finished"
 
