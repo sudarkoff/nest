@@ -3,21 +3,32 @@
   connection: local
 
   roles:
-    - osx-defaults
+    - role: osx-defaults
+      tags: osx-defaults
     - role: computername
       when: computername is defined
-    - ssh_config
-    - sudoers
-    - git
-    - terminal
-    - homebrew
-    - apps
+      tags: computername
+    - role: ssh_config
+      tags: ssh_config
+    - role: sudoers
+      tags: sudoers
+    - role: terminal
+      tags: terminal
+    - role: homebrew
+      tags: homebrew
+    - role: git
+      tags: git
+    - role: apps
+      tags: apps
 
   vars:
     - username: "{{ lookup('env', 'USER') }}"
     - brew_apps:
       - htop-osx
       - jq
+      - markdown
+      - pandoc
+      - the_silver_searcher
     - brew_cask_apps:
       - alfred
       - slate
