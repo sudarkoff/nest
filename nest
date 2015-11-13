@@ -64,7 +64,6 @@ function install_clt {
 
 setStatusMessage "Checking if we need to ask for a sudo password"
 sudo -v
-export ANSIBLE_ASK_SUDO_PASS=True
 
 setStatusMessage "Keep-alive: update existing sudo time stamp until we are finished"
 
@@ -113,7 +112,7 @@ fi
 
 if [ -f "config/$role.yml" ]; then
     setStatusMessage "Running the ansible playbook for '$role'"
-    ansible-playbook -i "localhost," $extra_vars config/$role.yml
+    ansible-playbook -i "localhost," --become $extra_vars config/$role.yml
 else
     triggerError "No playbook for '$role' found"
 fi
