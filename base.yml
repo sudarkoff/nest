@@ -29,6 +29,7 @@
       - markdown
       - pandoc
       - the_silver_searcher
+      - irssi
     - brew_cask_apps:
       - alfred
       - slate
