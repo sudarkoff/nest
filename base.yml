@@ -14,21 +14,27 @@
       tags: sudoers
     - role: terminal
       tags: terminal
-    - role: homebrew
-      tags: homebrew
     - role: git
       tags: git
-    - role: apps
-      tags: apps
+    - role: homebrew
+      tags: homebrew
+#    - role: zsh
+#      tags: zsh
+#    - role: vim
+#      tags: vim
+#    - role: dotfiles
+#      tags: dotfiles
 
   vars:
     - username: "{{ lookup('env', 'USER') }}"
+
     - brew_apps:
       - htop-osx
       - jq
       - markdown
       - pandoc
       - the_silver_searcher
+
     - brew_cask_apps:
       - alfred
       - slate
