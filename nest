@@ -104,7 +104,7 @@ if [ -d "/usr/local/nest/config" ]; then
     setStatusMessage "Update your config from git"
     cd /usr/local/nest/config
     git pull -q
-    cat $role > /usr/local/nest/config/role
+    echo $role > /usr/local/nest/config/role
 else
     setStatusMessage "Getting the nest config"
     git clone -q https://github.com/sudarkoff/nest.git /usr/local/nest/config
