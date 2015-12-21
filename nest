@@ -1,12 +1,29 @@
 #!/bin/bash
 
+while [[ $# > 1 ]]; do
+    opt="$1"
+    case $opt in
+        -r|--role)
+            role="$2"
+            shift
+            ;;
+        -b|--branch)
+            branch="$2"
+            shift
+            ;;
+        -e|--extra)
+            extra_ansible_opts="$2"
+            shift
+            ;;
+        *)
+            ;;
+    esac
+    shift
+done
+
 green='\e[1;32m'  # green
 red='\e[1;31m'    # red
 off='\e[0m'       # reset
-
-role=$1
-shift
-extra_ansible_opts=$@
 
 function setStatusMessage {
     printf "${IRed} --> ${green}$1${off}\n" 1>&2
@@ -91,7 +108,6 @@ sudo mkdir -p /usr/local/nest/roles
 sudo chmod -R g+rwx /usr/local
 sudo chgrp -R admin /usr/local
 
-setStatusMessage "Determine the role"
 if [ -z "$role" ]; then
     if [ -f "/usr/local/nest/config/role" ]; then
         role=$(cat /usr/local/nest/config/role)
@@ -99,15 +115,28 @@ if [ -z "$role" ]; then
         role="base"
     fi
 fi
+setStatusMessage "Selected role: $role"
+
+if [ -z "$branch" ]; then
+    if [ -f "/usr/local/nest/config/branch" ]; then
+        branch=$(cat /usr/local/nest/config/branch)
+    else
+        branch="master"
+    fi
+fi
+setStatusMessage "Selected branch: $branch"
 
 if [ -d "/usr/local/nest/config" ]; then
+    echo $role > /usr/local/nest/config/role
+    echo $branch > /usr/local/nest/config/branch
+
     setStatusMessage "Update your config from git"
     cd /usr/local/nest/config
     git pull -q
-    cat $role > /usr/local/nest/config/role
+    git checkout $branch --force
 else
     setStatusMessage "Getting the nest config"
-    git clone -q https://github.com/sudarkoff/nest.git /usr/local/nest/config
+    git clone -q -b $branch https://github.com/sudarkoff/nest.git /usr/local/nest/config
 fi
 
 cd /usr/local/nest
