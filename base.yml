@@ -4,26 +4,17 @@
 
   roles:
     - role: osx_defaults
-      tags: osx_defaults
     - role: computername
       when: computername is defined
-      tags: computername
     - role: ssh_config
-      tags: ssh_config
     - role: sudoers
-      tags: sudoers
     - role: terminal
-      tags: terminal
     - role: git
-      tags: git
+    #- role: dotfiles
     - role: homebrew
-      tags: homebrew
-#    - role: zsh
-#      tags: zsh
-#    - role: vim
-#      tags: vim
-#    - role: dotfiles
-#      tags: dotfiles
+    # below roles depend on homebrew
+    #- role: zsh
+    - role: vim
 
   vars:
     - username: "{{ lookup('env', 'USER') }}"
@@ -50,7 +41,6 @@
       - dropbox
       - spotify
       - sonos
-      - macvim
       - kaleidoscope
       - vagrant
       - virtualbox
