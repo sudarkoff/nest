@@ -11,6 +11,10 @@ while [[ $# > 1 ]]; do
             branch="$2"
             shift
             ;;
+        -n|--computer-name)
+            computername="-e computername='$2'"
+            shift
+            ;;
         -e|--extra)
             extra_ansible_opts="$2"
             shift
@@ -151,7 +155,7 @@ fi
 
 if [ -f "config/$role.yml" ]; then
     setStatusMessage "Running the ansible playbook for '$role'"
-    ansible-playbook -i "localhost," $extra_ansible_opts config/$role.yml
+    ansible-playbook -i "localhost," $computername $extra_ansible_opts config/$role.yml
 else
     triggerError "No playbook for '$role' found"
 fi
