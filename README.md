@@ -4,8 +4,20 @@
 $ curl -s https://raw.githubusercontent.com/sudarkoff/nest/master/nest | bash
 ```
 
-To pass additional parameters to the playbook:
+Once `nest` is installed you can execute it with some additional parameters. To change the role:
 
 ```
-$ curl -s https://raw.githubusercontent.com/sudarkoff/nest/master/nest | bash -s -e computername=dragon
+$ /usr/local/nest/config/nest -r base
+```
+
+To change the branch:
+
+```
+$ /usr/local/nest/config/nest -b develop
+```
+
+To change the computer name:
+
+```
+$ /usr/local/nest/config/nest -n gameover
 ```
