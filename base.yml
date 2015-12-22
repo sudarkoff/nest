@@ -3,8 +3,8 @@
   connection: local
 
   roles:
-    - role: osx-defaults
-      tags: osx-defaults
+    - role: osx_defaults
+      tags: osx_defaults
     - role: computername
       when: computername is defined
       tags: computername
