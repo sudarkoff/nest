@@ -19,12 +19,13 @@
     - username: "{{ lookup('env', 'USER') }}"
 
     - brew_apps:
-      - htop-osx
+      - tmux
+      - the_silver_searcher
       - jq
+      - htop-osx
+      - irssi
       - markdown
       - pandoc
-      - the_silver_searcher
-      - irssi
 
     - brew_cask_apps:
       - alfred
