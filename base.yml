@@ -10,11 +10,10 @@
     - role: sudoers
     - role: terminal
     - role: git
-    #- role: dotfiles
     - role: homebrew
     # below roles depend on homebrew
-    #- role: zsh
     - role: vim
+    #- role: zsh
 
   vars:
     - username: "{{ lookup('env', 'USER') }}"
