@@ -6,6 +6,7 @@
     regexp="{{ item.regexp }}"
     line="{{ item.line }}"
     state=present
+    backrefs=yes
     create=true
   with_items:
-    - { regexp: '^#\s*%wheel\s+ALL=(ALL)\s+NOPASSWD:\s+ALL', line: '%wheel\tALL=(ALL) NOPASSWD: ALL' }
+    - { regexp: '%admin\s+ALL=\(ALL\)\s+ALL', line: '%admin\tALL=(ALL) NOPASSWD: ALL' }
