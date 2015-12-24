@@ -38,4 +38,4 @@
 
 - name: change shell to zsh
   command: chsh -s /bin/zsh
-  sudo: yes
+  become: yes

@@ -6,7 +6,7 @@
     - /usr/local/share
     - /usr/local/man
     - /usr/local/man/man1
-  sudo: yes
+  become: yes
 
 - name: install homebrew via the curl oneliner
   shell: ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
