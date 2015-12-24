@@ -136,8 +136,10 @@ if [ -d "/usr/local/nest/config" ]; then
 
     setStatusMessage "Update your config from git"
     cd /usr/local/nest/config
-    git pull -q
+
+    git fetch -q
     git checkout $branch --force
+    git reset --hard origin/$branch
 else
     setStatusMessage "Getting the nest config"
     git clone -q -b $branch https://github.com/sudarkoff/nest.git /usr/local/nest/config
