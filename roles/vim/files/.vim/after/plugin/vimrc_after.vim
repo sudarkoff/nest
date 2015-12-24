@@ -5,7 +5,7 @@
 " be overwritten.
 
 if filereadable(expand("~/.yadr/vim/after/.vimrc.after"))
-  source ~/.yadr/vim/after/.vimrc.after
+  source ~/.vim/after/.vimrc.after
 endif
 
 if filereadable(expand("~/.vimrc.after"))

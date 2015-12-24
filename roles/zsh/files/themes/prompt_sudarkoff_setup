@@ -1,0 +1,70 @@
+#
+# A theme based on skwp theme
+#  * Git branch info on the left
+#  * Two-line prompt
+#
+# Authors:
+#   George Sudarkoff <george@sudarkoff.com>
+
+function prompt_sudarkoff_precmd {
+  setopt LOCAL_OPTIONS
+  unsetopt XTRACE KSH_ARRAYS
+
+  # Get Git repository information.
+  if (( $+functions[git-info] )); then
+    git-info on
+    git-info
+  fi
+}
+
+function prompt_sudarkoff_setup {
+  setopt LOCAL_OPTIONS
+  unsetopt XTRACE KSH_ARRAYS
+  prompt_opts=(cr percent subst)
+
+  autoload -Uz add-zsh-hook
+
+  add-zsh-hook precmd prompt_sudarkoff_precmd
+
+  # Use extended color pallete if available.
+  if [[ $TERM = *256color* || $TERM = *rxvt* ]]; then
+    __PROMPT_SUDARKOFF_COLORS=(
+      "%F{81}"  # turquoise
+      "%F{166}" # orange
+      "%F{135}" # purple
+      "%F{161}" # hotpink
+      "%F{118}" # limegreen
+    )
+  else
+    __PROMPT_SUDARKOFF_COLORS=(
+      "%F{cyan}"
+      "%F{yellow}"
+      "%F{magenta}"
+      "%F{red}"
+      "%F{green}"
+    )
+  fi
+
+  # git
+  zstyle ':prezto:module:git:info' verbose 'no'
+#  zstyle ':prezto:module:git:info:action' format '! %s'
+  zstyle ':prezto:module:git:info:added' format "✚"
+  zstyle ':prezto:module:git:info:ahead' format '⬆'
+  zstyle ':prezto:module:git:info:behind' format '⬇'
+  zstyle ':prezto:module:git:info:branch' format "⭠ %b "
+#  zstyle ':prezto:module:git:info:commit' format '➦ %.7c'
+  zstyle ':prezto:module:git:info:deleted' format "✖"
+  zstyle ':prezto:module:git:info:modified' format "✱"
+#  zstyle ':prezto:module:git:info:position' format '%p'
+  zstyle ':prezto:module:git:info:renamed' format '➙'
+  zstyle ':prezto:module:git:info:stashed' format '$'
+  zstyle ':prezto:module:git:info:unmerged' format '═'
+  zstyle ':prezto:module:git:info:untracked' format "?"
+  zstyle ':prezto:module:git:info:keys' format 'prompt' '(%b%A%B%S%a%d%m%r%U%u)'
+
+  # TODO: Make hostname hotpink (_COLORS[4]) if logged in via ssh
+  PROMPT="${__PROMPT_SUDARKOFF_COLORS[1]}%~%f ${__PROMPT_SUDARKOFF_COLORS[2]}"'$git_info[prompt]'"%f
+${__PROMPT_SUDARKOFF_COLORS[3]}%n%f@${__PROMPT_SUDARKOFF_COLORS[5]}%m%f $ "
+}
+
+prompt_sudarkoff_setup "$@"

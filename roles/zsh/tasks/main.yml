@@ -1,0 +1,41 @@
+---
+- name: install zsh
+  homebrew: name={{item}} state=latest
+  with_items:
+    - zsh
+
+- name: install prezto
+  git: repo=https://github.com/sorin-ionescu/prezto.git dest=~/.zprezto recursive=yes force=yes
+
+- name: install .z files
+  file: src=~/.zprezto/runcoms/{{item}} dest=~/.{{item}} state=link
+  with_items:
+    - zshenv
+    - zprofile
+    - zshrc
+    - zlogin
+    - zlogout
+
+- name: install .zpreztorc
+  copy: src=~/.zprezto/runcoms/zpreztorc dest=~/.zpreztorc force=yes
+
+# Custom prezto modules
+- set_fact:
+    prezto_modules:
+      - dirmark
+      - homebin
+
+- name: install custom prezto modules
+  copy: src=modules/{{item}} dest=~/.zprezto/modules force=yes
+  with_items: "{{prezto_modules}}"
+
+- name: add custom prezto modules to .zpreztorc
+  lineinfile: "dest=~/.zpreztorc insertbefore=\"^  'prompt'\" line=\"  '{{item}}' \\ \""
+  with_items: "{{prezto_modules}}"
+
+- name: remove trailing spaces
+  replace: dest=~/.zpreztorc regexp="\s*$"
+
+- name: change shell to zsh
+  command: chsh -s /bin/zsh
+  sudo: yes
