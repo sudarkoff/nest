@@ -8,4 +8,4 @@
     state=present
     create=true
   with_items:
-    - { regexp: '^"{{username}}"', line: '"{{username}}" ALL=(ALL) NOPASSWD: ALL' }
+    - { regexp: '^#\s*%wheel\s+ALL=(ALL)\s+NOPASSWD:\s+ALL', line: '%wheel\tALL=(ALL) NOPASSWD: ALL' }
