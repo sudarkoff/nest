@@ -19,17 +19,26 @@
 - name: install .zpreztorc
   copy: src=~/.zprezto/runcoms/zpreztorc dest=~/.zpreztorc force=yes
 
-# Custom prezto modules
 - set_fact:
-    prezto_modules:
+    custom_prezto_modules:
       - dirmark
       - homebin
+    standard_prezto_modules:
+      - git
+      - osx
+      - syntax-highlighting
+      - history-substring-search
+      - ssh
+
+- set_fact:
+    prezto_modules:
+      "{{ custom_prezto_modules + standard_prezto_modules }}"
 
 - name: install custom prezto modules
   copy: src=modules/{{item}} dest=~/.zprezto/modules force=yes
-  with_items: "{{prezto_modules}}"
+  with_items: "{{custom_prezto_modules}}"
 
-- name: add custom prezto modules to .zpreztorc
+- name: add prezto modules to .zpreztorc
   lineinfile: "dest=~/.zpreztorc insertbefore=\"^  'prompt'\" line=\"  '{{item}}' \\ \""
   with_items: "{{prezto_modules}}"
 
