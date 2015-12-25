@@ -1,0 +1,3 @@
+---
+launchd_path: /Library/LaunchDaemons
+nest_plist_name: com.sudarkoff.nest.daily
