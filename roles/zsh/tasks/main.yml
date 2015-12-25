@@ -45,6 +45,20 @@
 - name: remove trailing spaces
   replace: dest=~/.zpreztorc regexp="\s*$"
 
+- name: install custom theme
+  copy: src=themes/prompt_sudarkoff_setup dest=~/.zprezto/modules/prompt/functions/
+
+- name: configure custom prompt
+  lineinfile: >
+    dest=~/.zpreztorc
+    regexp="{{ item.regexp }}"
+    line="{{ item.line }}"
+    state=present
+    backrefs=yes
+    create=true
+  with_items:
+    - { regexp: "zstyle ':prezto:module:prompt' theme 'sorin'", line: "zstyle ':prezto:module:prompt' theme 'sudarkoff'" }
+
 - name: change shell to zsh
   command: chsh -s /bin/zsh
   become: yes
