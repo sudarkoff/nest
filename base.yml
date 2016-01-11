@@ -8,17 +8,17 @@
     - role: computername
       when: computername is defined
       tags: computername
-    - role: ssh_config
-      tags: ssh
     - role: sudoers
       tags: sudoers
     - role: terminal
       tags: terminal
-    - role: git
-      tags: git
     - role: homebrew
       tags: homebrew
-    # below roles depend on homebrew
+    # below roles assume homebrew is installed
+    - role: ssh_config
+      tags: ssh
+    - role: git
+      tags: git
     - role: vim
       tags: vim
     - role: zsh
