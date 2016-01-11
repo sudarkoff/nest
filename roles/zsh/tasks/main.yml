@@ -60,5 +60,5 @@
     - { regexp: "zstyle ':prezto:module:prompt' theme 'sorin'", line: "zstyle ':prezto:module:prompt' theme 'sudarkoff'" }
 
 - name: change shell to zsh
-  command: chsh -s /bin/zsh
+  command: chsh -s /bin/zsh {{username}}
   become: yes
