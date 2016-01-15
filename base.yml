@@ -37,19 +37,20 @@
       - pandoc
 
     - brew_cask_apps:
-      - alfred
-      - slate
-      - rescuetime
-      - flux
       - 1password
-      - typinator
-      - slack
-      - google-chrome
-      - evernote
-      - omnifocus
+      - alfred
       - dropbox
-      - spotify
-      - sonos
+      - evernote
+      - flux
+      - google-chrome
       - kaleidoscope
+      - kindle
+      - omnifocus
+      - rescuetime
+      - slack
+      - slate
+      - sonos
+      - spotify
+      - typinator
       - vagrant
       - virtualbox
