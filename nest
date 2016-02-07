@@ -155,9 +155,9 @@ if [ -f "config/requirements.yml" ]; then
     ansible-galaxy install -f -r config/requirements.yml -p roles
 fi
 
-if [ -f "config/$role.yml" ]; then
+if [ -f "config/$role.yaml" ]; then
     setStatusMessage "Running the ansible playbook for '$role'"
-    ansible-playbook -i "localhost," $computername $extra_ansible_opts config/$role.yml
+    ansible-playbook -i "localhost," $computername $extra_ansible_opts config/$role.yaml
 else
     triggerError "No playbook for '$role' found"
 fi
