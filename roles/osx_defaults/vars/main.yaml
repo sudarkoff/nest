@@ -2,7 +2,7 @@ osx_defaults:
   - domain: 'com.apple.dock'
     key: 'autohide'
     type: boolean
-    value: true
+    value: "true"
   - domain: 'com.apple.dock'
     key: 'minimize-to-application'
     type: integer
@@ -10,7 +10,7 @@ osx_defaults:
   - domain: 'com.apple.dock'
     key: 'show-process-indicators'
     type: boolean
-    value: true
+    value: "true"
   - domain: 'com.apple.dock'
     key: 'orientation'
     type: string
@@ -46,11 +46,11 @@ osx_defaults:
   - domain: 'NSGlobalDomain'
     key: 'NSNavPanelExpandedStateForSaveMode'
     type: boolean
-    value: true
+    value: "true"
   - domain: 'NSGlobalDomain'
     key: 'PMPrintingExpandedStateForPrint'
     type: boolean
-    value: true
+    value: "true"
   - domain: 'com.apple.dock'
     key: 'tilesize'
     type: float
@@ -66,37 +66,37 @@ osx_defaults:
   - domain: 'NSGlobalDomain'
     key: 'NSQuitAlwaysKeepsWindows'
     type: boolean
-    value: false
+    value: "false"
   - domain: 'NSGlobalDomain'
     key: 'ApplePressAndHoldEnabled'
     type: boolean
-    value: false
+    value: "false"
   - domain: 'com.apple.desktopservices'
     key: 'DSDontWriteNetworkStores'
     type: boolean
-    value: true
+    value: "true"
   - domain: 'com.apple.print.PrintingPrefs'
     key: 'Quit When Finished'
     type: boolean
-    value: true
+    value: "true"
   - domain: 'com.apple.Safari'
     key: 'IncludeInternalDebugMenu'
     type: boolean
-    value: true
+    value: "true"
   - domain: 'com.apple.Safari'
     key: 'IncludeDevelopMenu'
     type: boolean
-    value: true
+    value: "true"
   - domain: 'com.apple.Safari'
     key: 'WebKitDeveloperExtrasEnabledPreferenceKey'
     type: boolean
-    value: true
+    value: "true"
   - domain: 'com.apple.Safari'
     key: 'com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled'
     type: boolean
-    value: true
+    value: "true"
   - domain: 'NSGlobalDomain'
     key: 'WebKitDeveloperExtras'
     type: boolean
-    value: true
+    value: "true"
 

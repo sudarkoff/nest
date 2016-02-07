@@ -1,0 +1,31 @@
+---
+username: "{{ lookup('env', 'USER') }}"
+
+brew_apps:
+  - tmux
+  - the_silver_searcher
+  - jq
+  - htop-osx
+  - irssi
+  - markdown
+  - pandoc
+
+brew_cask_apps:
+  - 1password
+  - alfred
+  - dropbox
+  - evernote
+  - flux
+  - google-chrome
+  - kaleidoscope
+  - kindle
+  - omnifocus
+  - rescuetime
+  - slack
+  - slate
+  - sonos
+  - spotify
+  - typinator
+  - vagrant
+  - virtualbox
+
