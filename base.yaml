@@ -8,8 +8,6 @@
       when: computername is defined
     - role: sudoers
     - role: terminal
-    - role: homebrew
-    # below roles assume homebrew is installed
     - role: ssh_config
     - role: git
     - role: vim
