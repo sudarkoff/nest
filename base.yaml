@@ -4,25 +4,16 @@
 
   roles:
     - role: osx_defaults
-      tags: osx
     - role: computername
       when: computername is defined
-      tags: computername
     - role: sudoers
-      tags: sudoers
     - role: terminal
-      tags: terminal
     - role: homebrew
-      tags: homebrew
     # below roles assume homebrew is installed
     - role: ssh_config
-      tags: ssh
     - role: git
-      tags: git
     - role: vim
-      tags: vim
     - role: zsh
-      tags: zsh
 
   vars:
     - username: "{{ lookup('env', 'USER') }}"
