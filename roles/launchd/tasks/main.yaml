@@ -1,12 +1,10 @@
 ---
 - name: install the launchd script
-  become: yes
   template:
     src: "{{ nest_plist_name }}.tpl"
     dest: "{{ launchd_path }}/{{ nest_plist_name }}.plist"
 
 - name: load the launchd script
-  become: yes
   command: launchctl load {{ launchd_path }}/{{ item }}.plist
   with_items:
     - "{{ nest_plist_name }}"

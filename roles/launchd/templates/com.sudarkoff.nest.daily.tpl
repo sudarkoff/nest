@@ -4,18 +4,13 @@
 <dict>
 	<key>Label</key>
 	<string>com.sudarkoff.nest.daily</string>
-	<key>LowPriorityIO</key>
+	<key>OnDemand</key>
 	<true/>
 	<key>ProgramArguments</key>
 	<array>
 		<string>/usr/local/nest/config/nest</string>
 	</array>
-	<key>StartCalendarInterval</key>
-	<dict>
-		<key>Hour</key>
-		<integer>4</integer>
-	</dict>
-	<key>UserName</key>
-	<string>{{username}}</string>
+	<key>StartInterval</key>
+	<integer>3600</integer>
 </dict>
 </plist>
