@@ -31,7 +31,7 @@ else
    echo Creating initial note
    git config notes.rewriteRef refs/notes/commits | cat
 
-   echo "$TEMPLATE" | git notes edit -F - $HASH
+   echo "$TEMPLATE" | git notes add -F - $HASH
 
 fi
 
