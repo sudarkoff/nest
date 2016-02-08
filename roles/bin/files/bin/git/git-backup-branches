@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# This script backs up all branches that are not named 'master' into a bundle.
+
+if [ $# -lt 2 ]; then
+   echo "usage: $0 <repo path> <backup path> [<repo name]>"
+   exit 1
+fi
+
+repoPath=$(readlink -f $1)
+backupPath=$(readlink -f $2)
+repoName=${3-$(basename "$repoPath")}
+backupFile="$backupPath/$repoName.$(date +%F-%T).bundle"
+
+cd -P "$repoPath"
+treeishes=$(git branch --color=never | sed 's/\*//g' | sed 's/[ \t]\+//g' | grep -v master | sed 's/^/master../')
+if [ -n "$treeishes" ]; then
+   git bundle create "$backupFile" $treeishes
+   git bundle verify "$backupFile"
+fi

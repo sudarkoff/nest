@@ -1,0 +1,22 @@
+---
+- name: create ~/bin
+  copy:
+    src: bin/
+    dest: "/Users/{{ username }}/bin"
+    owner: "{{ username }}"
+
+- name: make certain ~/bin scripts executable
+  file:
+    path: "/Users/{{ username }}/{{ item }}"
+    mode: "u+x"
+  with_items:
+    - bin/log
+    - bin/pmake
+    - bin/flush-dns
+
+- name: make git scripts executable
+  file:
+    path: "/Users/{{ username }}/bin/git/{{ item | basename }}"
+    mode: "u+x"
+  with_fileglob:
+    - bin/git/git-*

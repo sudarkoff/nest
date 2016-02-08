@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# pmake builds ${PTREE} locally, timing the build and highlighting any errors
+time make -j -C ${PTREE} $* 2>&1 | sed -e "s/\(error\)/$(printf "\033[1;31m")\1$(printf "\033[0;0m")/g"

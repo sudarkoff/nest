@@ -1,0 +1,40 @@
+#!/bin/bash
+
+set -o nounset
+set -o errexit
+set -o pipefail
+
+TEMPLATE="<a good 1-line overview>
+
+<a detailed change description here, can use Markdown>
+"
+
+HELP=${1:-nohelp}
+if [ $HELP = "--help" ]; then
+   echo "Usage: git description [<upstream>]"
+   echo "Does a 'git notes edit' on the first commit in this branch but not in <upstream> (default master)"
+   exit 1
+fi
+
+BRANCH=${1:-master}
+
+HASH=$(git log --format=%H $BRANCH..HEAD | tail -1)
+if [ "$HASH" == "" ]; then
+   echo No commit found. You must first commit something, and the note will be attached to that first commit.
+   exit 1
+fi
+echo Found commit ${HASH}
+
+if git notes show $HASH >/dev/null 2>/dev/null; then
+   echo Editing existing note
+else
+   echo Creating initial note
+   git config notes.rewriteRef refs/notes/commits | cat
+
+   echo "$TEMPLATE" | git notes add -F - $HASH
+
+fi
+
+git notes edit $HASH
+
+#eof
