@@ -1,0 +1,38 @@
+#!/bin/bash
+
+FMTARGS="--color --graph --oneline --decorate"
+COL0="\033[0;33m"
+COL1="\033[1;31m"
+COL2="\033[1;33m"
+COLn="\033[0m"
+
+function show_commit {
+   last=`git log -1 $FMTARGS $1`
+   echo -e "$last ${COL0}(${COL2}$2${COL0})${COLn}"
+}
+
+set -e
+
+echo Branches:
+git branch -v
+
+echo
+echo Commits:
+
+# Show commits on top of master
+git log $FMTARGS master..HEAD
+
+# Show any cherry-picked commits that are in master but not in origin/master
+picked=`git log --pretty="%H" origin/master..master`
+for h in $picked; do
+   show_commit $h "cherry-picked"
+done
+
+# Show the base commit in origin/master
+merge_base=`git merge-base origin/master HEAD`
+show_commit $merge_base "sync base"
+
+echo
+echo Status:
+git status
+

@@ -1,0 +1,259 @@
+#!/usr/bin/env python
+
+"""
+Plain text personal log manager.
+"""
+
+__author__ = "George Sudarkoff <george@sudarkoff.com>"
+__copyright__ = "Copyright (c) 2008-2012, George Sudarkoff"
+__license__ = "New BSD license, http://www.opensource.org/licenses/bsd-license.php"
+__version__ = "1.0"
+
+import os, sys, re, time
+from datetime import date, datetime, timedelta
+from optparse import OptionParser
+
+
+# ====================================================================
+# CONFIGURATION PARAMETERS
+# ====================================================================
+DEFAULT_TIME_PERIOD=30
+TAG_COLORS={}
+LOG_FILE = "%s/log.txt" % (os.environ.get("HOME"))
+
+# Load local configuration from ~/.log.py
+CONFIG_FILE="%s/.log.py" % (os.environ.get("HOME"))
+execfile(CONFIG_FILE)
+
+# Colors for common tags.
+# Unrecognized tags will be printed with WHITE color.
+NONE         = ""
+BLACK        = "\033[0;30m"
+RED          = "\033[0;31m"
+GREEN        = "\033[0;32m"
+BROWN        = "\033[0;33m"
+BLUE         = "\033[0;34m"
+PURPLE       = "\033[0;35m"
+CYAN         = "\033[0;36m"
+LIGHT_GREY   = "\033[0;37m"
+DARK_GREY    = "\033[1;30m"
+LIGHT_RED    = "\033[1;31m"
+LIGHT_GREEN  = "\033[1;32m"
+YELLOW       = "\033[1;33m"
+LIGHT_BLUE   = "\033[1;34m"
+LIGHT_PURPLE = "\033[1;35m"
+LIGHT_CYAN   = "\033[1;36m"
+WHITE        = "\033[1;37m"
+DEFAULT      = "\033[0m"
+
+tagColors = dict(list(TAG_COLORS.items()) + list({
+   "@meta":     LIGHT_GREY,
+   "@warn":     LIGHT_RED,
+   "@task":     LIGHT_GREEN,
+   "@talk":     LIGHT_BLUE,
+   "@project":  YELLOW,
+}.items()))
+
+TAG_REGEX = r"(\@[0-9A-Za-z-_]+)(\:[0-9A-Za-z-_.]+)?\s+"
+
+# N days back from today
+defaultTimePeriod = DEFAULT_TIME_PERIOD
+
+# ====================================================================
+
+def highlight_tags(matchobj):
+   """Highlight tags."""
+   COLOR = WHITE
+   try:
+      COLOR = tagColors[matchobj.group(1)]
+   except KeyError:
+      pass
+   return COLOR + matchobj.group(0) + DEFAULT
+
+def remove_tags(matchobj):
+   """Remove tags."""
+   return ""
+
+def to_timestamp(text):
+   """Convert string to timestamp."""
+   return datetime(*time.strptime(text, "%Y-%m-%d %H:%M:%S")[:6])
+
+def reverse_date_sort(a, b):
+   """Sort records in reverse chronological order."""
+   if (to_timestamp(a[:19]) > to_timestamp(b[:19])):
+      return -1
+   elif (to_timestamp(a[:19]) < to_timestamp(b[:19])):
+      return 1
+   else:
+      return 0
+
+class LogRecord(object):
+   """LogRecord contains a single record from the log file.
+
+   Log-file parser expects the following format:
+   yyyy-mm-dd hh:mm:ss [@tag[ ...]] Log message.
+   
+   TODO: This class is currently not in use. Implement parsing log entries
+   into the array of these puppies and it'll be much easier to remove tags,
+   timestamp, color, reshuffle stuff, etc.
+   """
+   def __init__(self):
+      self.timestamp = timestamp.now()
+      self.tags = []
+      self.message = None
+
+   def from_string(self, line):
+      self.timestamp = to_timestamp(line[:19])
+      #line[21:] - the remainder of the string
+      return self.timestamp
+
+class Log(object):
+   def __init__(self):
+      self.usage = "usage: %prog [options] <add|ls|list|tags>\n\t[D|YYYY-MM-DD..[YYYY-MM-DD]]\n\t" + \
+              "[@tag[:suffix][ ...]]\n\t[message]"
+      self.get_options()
+      if (self.action is None):
+         self.parser.error("incorrect number of arguments")
+
+      # List all tags
+      if (self.action == "tags"):
+          self.tagsAction()
+      # Add
+      elif (self.action == "add"):
+         if (self.args):
+             self.addAction(" ".join(self.args))
+         else:
+             self.parser.error("add: too few parameters")
+      # List
+      elif (self.action == "ls" or self.action == "list"):
+         if (len(self.args) > 0):
+            tags = []
+            from_date = None
+            to_date = None
+            re_from_date = re.compile(r"([0-9]{4}-[0-9]{2}-[0-9]{2})\.\.?.*")
+            re_to_date = re.compile(r".*\.\.([0-9]{4}-[0-9]{2}-[0-9]{2})")
+            re_days = re.compile(r"^[0-9]+$")
+
+            for arg in self.args:
+               if (re.compile(r"\@[A-Za-z]+").search(arg)):
+                  tags.append(arg)
+               else:
+                  if (re_days.match(arg)):
+                     match = re_days.search(arg).group(0)
+                     (from_date, to_date) = self._dateDaysAgo(match)
+                  else:
+                     if (re_from_date.match(arg)):
+                        match = re_from_date.match(arg).group(1)
+                        from_date = datetime(*time.strptime(match, "%Y-%m-%d")[:3])
+                     if (re_to_date.match(arg)):
+                        match = re_to_date.search(arg).group(1)
+                        to_date = datetime(*time.strptime(match, "%Y-%m-%d")[:3])
+                     else:
+                        # if to_date is not specified, use current date
+                        to_date = datetime.now()
+            self.listAction(from_date, to_date, len(tags) > 0 and tags or None)
+         else:
+            # by default list entries from the last defaultTimePeriod days
+            (from_date, to_date) = self._dateDaysAgo(defaultTimePeriod)
+            self.listAction(from_date, to_date)
+      else:
+         self.parser.error("unknown action %s" % (self.action, ))
+
+   def _dateDaysAgo(self, days):
+      to_date = datetime.now()    # current date
+      delta = timedelta(days=-int(days))
+      from_date = to_date + delta
+      return (from_date, to_date)
+
+   def get_options(self):
+      """Parsing command-line options."""
+      self.parser = OptionParser(usage=self.usage, version="%prog " + __version__)
+      self.parser.add_option("-c", "--no-color",
+                             action="store_true", dest="no_color", default=False,
+                             help="do not use color in output [default: %default]")
+      self.parser.add_option("-t", "--no-timestamp",
+                            action="store_true", dest="no_timestamp", default=False,
+                             help="do not show timestamp [default: %default]")
+      self.parser.add_option("-x", "--no-tags",
+                             action="store_true", dest="no_tags", default=False,
+                             help="do not show tags [default: %default]")
+      # TODO: Implement grouping by tag suffix to allow listing log entries in
+      # sections grouped by a project, for example.
+      self.parser.add_option("-g", "--group-by-tag",
+                             action="store", dest="group_by_tag", default=False,
+                             help="group by tag suffix (e.g.: @project:proj_name)")
+      (self.options, args) = self.parser.parse_args()
+      self.action = len(args) > 0 and args[0] or None
+      self.args = len(args) > 1 and args[1:] or []
+
+   def get_log_dict(self, from_date, to_date):
+      """Obtain a dictionary of records from the LOG_FILE."""
+      count = 0
+      records = {}
+      # build a dictionary of the log items
+      for line in open(LOG_FILE).readlines():
+         if (line.strip() == ""):
+            continue
+         stamp = to_timestamp(line[:19])
+         if ((from_date is None and to_date is None) or 
+            (stamp.date() >= from_date.date() and stamp.date() <= to_date.date())):
+            records[stamp] = line[20:].rstrip()
+      return records
+
+   def addAction(self, message):
+      """Add new log record."""
+      f = open(LOG_FILE, "a")
+      timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+      f.write("%s %s%s" % (timestamp, message, os.linesep))
+      f.close()
+
+   def listAction(self, from_date=None, to_date=None, tags=None):
+      """List log records that meet specified criteria."""
+      items = []
+      records = self.get_log_dict(from_date, to_date)
+
+      if (tags is not None):
+         for timestamp, message in records.iteritems():
+            match = False
+            for tag in tags:
+               if (re.search(tag, message, re.IGNORECASE)): match = True
+            if (match == True):
+               if (not self.options.no_timestamp):
+                  items.append("%s %s" % (timestamp, message))
+               else:
+                  items.append("%s" % (message))
+      else:
+         for timestamp, message in records.iteritems():
+            if (not self.options.no_timestamp):
+               items.append("%s %s" % (timestamp, message))
+            else:
+               items.append("%s" % (message))
+
+      # FIXME: Nothing to sort on if no timestamp, use LogRecord instead of
+      # simple list of strings
+      if (not self.options.no_timestamp):
+         items.sort(reverse_date_sort)
+
+      re_tag = re.compile(TAG_REGEX)
+      for item in items:
+         if (self.options.no_tags):
+            print re_tag.sub(remove_tags, item)
+         elif (not self.options.no_color):
+            print re_tag.sub(highlight_tags, item)
+         else:
+            print item
+
+   def tagsAction(self):
+      """List all recognized context tags."""
+      print "Colored context tags:"
+      for key in sorted(tagColors.keys()):
+          COLOR = WHITE
+          try:
+              COLOR = tagColors[key]
+          except KeyError:
+              pass
+          print "\t%s%s%s" % (COLOR, key, DEFAULT)
+
+if __name__ == "__main__":
+   log = Log()
+

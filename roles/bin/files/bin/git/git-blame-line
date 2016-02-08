@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+   echo "Usage: $0 <line-no> <file-name> [<num-of-revs>]"
+   echo ""
+   echo "Show blame going <num-of-revs> back (default: 15) for a given <line-no> in a <file-name>."
+   exit 1
+fi
+
+LINE=$1
+FILE=$2
+REVS=${3:-15}
+
+for commit in $(git rev-list -n $REVS HEAD $FILE); do
+   git blame -n -L$LINE,+1 $commit -- $FILE | less -F -X
+done
+

@@ -1,0 +1,65 @@
+#!/bin/bash
+
+. git-common-stuff.sh
+
+set -e
+
+if [[ "$1" == "--help" || "$1" == "" ]]; then
+   echo "Usage: git pick-by-path <regexp>"
+   echo "Cherry-picks into master any new changes from origin/master that include files with paths matching <regexp>"
+   echo "  Example: git pick-by-path \"apps/appname\|libs/libname\|another_name\|regexp_[a-zA-Z0-9_]*.h\""
+   exit 1
+fi
+
+PATH_REGEXP="$1"
+
+if [[ `git status --porcelain | wc -l` != 0 ]]; then
+   echo "Current branch not clean! (can use git stash)"
+   git status --porcelain
+   exit 2
+fi
+
+ORIG_BRANCH=`get_current_branch`
+
+git fetch origin || echo "WARNING: could not fetch origin!"
+
+if [[ "$ORIG_BRANCH" != "master" ]]; then
+   git checkout master
+   trap "git checkout $ORIG_BRANCH" ERR
+fi
+
+base=`git merge-base origin/master master`
+
+commits=`git log --reverse --format="%H" $base..origin/master`
+
+already_picked=`git log $base..master | grep -o "cherry picked from commit [0-9a-f]*" | grep -o "[0-9a-f]*$" || echo ""`
+
+CHANGED=0
+for c in $commits; do
+   if [[ `git show --name-only --pretty="format:" $c | grep "$PATH_REGEXP" | wc -l` == 0 ]]; then
+      continue
+   fi
+   if [[ `echo $already_picked | grep $c | wc -l` != 0 ]]; then
+      echo Commit $c already cherry picked, skipping.
+      continue
+   fi
+   echo Cherry-picking commit $c
+   git cherry-pick -x $c || error "Error cherry-picking $c, exiting!"
+   CHANGED=1
+done
+
+if [[ $CHANGED == 0 ]]; then
+   echo No new changes.
+fi
+
+if [[ "$ORIG_BRANCH" != "master" ]]; then
+   git checkout "$ORIG_BRANCH"
+   if [[ $CHANGED == 1 ]]; then
+      read -p "Rebase branch $ORIG_BRANCH onto master? [y/n] "
+      if [[ "$REPLY" == "y" || "$REPLY" == "Y" ]]; then
+         git rebase master || true
+      else
+         echo Did not rebase.
+      fi
+   fi
+fi
