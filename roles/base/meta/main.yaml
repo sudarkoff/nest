@@ -4,6 +4,7 @@ dependencies:
   - role: osx_defaults
   - role: computername
     when: computername is defined
+  - role: launchd
   - role: terminal
   - role: ssh_config
   - role: git
