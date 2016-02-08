@@ -58,7 +58,7 @@ function install_clt {
     if [ "$OSX_VERS" -ge 9 ]; then
         # create the placeholder file that's checked by CLI updates' .dist code
         # in Apple's SUS catalog
-        touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+        /usr/bin/touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
         # find the CLI Tools update
         PROD=$(softwareupdate -l | grep "\*.*Command Line" | head -n 1 | awk -F"*" '{print $2}' | sed -e 's/^ *//' | tr -d '\n')
         # install it
@@ -74,11 +74,11 @@ function install_clt {
         [ "$OSX_VERS" -eq 8 ] && DMGURL=http://devimages.apple.com.edgekey.net/downloads/xcode/command_line_tools_for_osx_mountain_lion_april_2014.dmg
 
         TOOLS=clitools.dmg
-        curl "$DMGURL" -o "$TOOLS"
+        /usr/bin/curl "$DMGURL" -o "$TOOLS"
         TMPMOUNT=`/usr/bin/mktemp -d /tmp/clitools.XXXX`
-        hdiutil attach "$TOOLS" -mountpoint "$TMPMOUNT"
-        installer $ALLOW_UNTRUSTED -pkg "$(find $TMPMOUNT -name '*.mpkg')" -target /
-        hdiutil detach "$TMPMOUNT"
+        /usr/bin/hdiutil attach "$TOOLS" -mountpoint "$TMPMOUNT"
+        /usr/sbin/installer $ALLOW_UNTRUSTED -pkg "$(find $TMPMOUNT -name '*.mpkg')" -target /
+        /usr/bin/hdiutil detach "$TMPMOUNT"
         rm -rf "$TMPMOUNT"
         rm "$TOOLS"
         exit
@@ -111,12 +111,12 @@ fi
 setStatusMessage "Create necessary folders"
 sudo mkdir -p /usr/local/nest
 sudo mkdir -p /usr/local/nest/roles
-sudo chmod -R g+rwx /usr/local
-sudo chgrp -R admin /usr/local
+sudo /bin/chmod -R g+rwx /usr/local
+sudo /usr/bin/chgrp -R admin /usr/local
 
 if [ ! -f $SITE_YAML ]; then
     # Create base site.yaml
-    cat >$SITE_YAML <<EOL
+    /bin/cat >$SITE_YAML <<EOL
 #
 # Generated on $(date -u +"%Y-%m-%dT%H:%M:%SZ")
 #
@@ -133,7 +133,7 @@ setStatusMessage "Configured base playbook"
 if [ ! -z "$role" ]; then
     # Add specified roles to site.yaml
     for r in $(echo $role | sed "s/,/ /g"); do
-        cat >>$SITE_YAML <<EOL
+        /bin/cat >>$SITE_YAML <<EOL
     - role: $r
 EOL
     done
@@ -142,7 +142,7 @@ fi
 
 if [ -z "$branch" ]; then
     if [ -f "/usr/local/nest/config/branch" ]; then
-        branch=$(cat /usr/local/nest/config/branch)
+        branch=$(/bin/cat /usr/local/nest/config/branch)
     else
         branch="master"
     fi
@@ -155,12 +155,12 @@ if [ -d "/usr/local/nest/config" ]; then
     setStatusMessage "Update your config from git"
     cd /usr/local/nest/config
 
-    git fetch -q
-    git checkout $branch --force
-    git reset --hard origin/$branch
+    /usr/local/bin/git fetch -q
+    /usr/local/bin/git checkout $branch --force
+    /usr/local/bin/git reset --hard origin/$branch
 else
     setStatusMessage "Getting the nest config"
-    git clone -q -b $branch https://github.com/sudarkoff/nest.git /usr/local/nest/config
+    /usr/local/bin/git clone -q -b $branch https://github.com/sudarkoff/nest.git /usr/local/nest/config
 fi
 
 cd /usr/local/nest
@@ -170,8 +170,8 @@ setStatusMessage "Create ansible.cfg"
 
 if [ -f "config/requirements.yml" ]; then
     setStatusMessage "Getting external roles"
-    ansible-galaxy install -f -r config/requirements.yml -p roles
+    /usr/local/bin/ansible-galaxy install -f -r config/requirements.yml -p roles
 fi
 
 setStatusMessage "Running the playbook"
-ansible-playbook -i "localhost," $computername $extra_ansible_opts config/site.yaml
+/usr/local/bin/ansible-playbook -i "localhost," $computername $extra_ansible_opts config/site.yaml

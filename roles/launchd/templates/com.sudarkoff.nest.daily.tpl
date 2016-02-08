@@ -4,8 +4,6 @@
 <dict>
 	<key>Label</key>
 	<string>com.sudarkoff.nest.daily</string>
-	<key>OnDemand</key>
-	<true/>
 	<key>ProgramArguments</key>
 	<array>
 		<string>/usr/local/nest/config/nest</string>
