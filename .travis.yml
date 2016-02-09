@@ -18,7 +18,7 @@ script:
   - ansible-playbook -i inventory test.yml --syntax-check
 
   # Run the playbook with ansible-playbook.
-  - ansible-playbook -i inventory test.yml --connection=local --sudo
+  #- ansible-playbook -i inventory test.yml --connection=local --sudo
 
   # Run the playbook again, checking to make sure it's idempotent.
   #- >
