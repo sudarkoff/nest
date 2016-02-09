@@ -1,5 +1,7 @@
 # Nest
 
+[![Build Status](https://travis-ci.org/sudarkoff/nest.svg?branch=master)](https://travis-ci.org/sudarkoff/nest)
+
 ```
 $ curl -s https://raw.githubusercontent.com/sudarkoff/nest/master/nest | bash
 ```
