@@ -6,6 +6,7 @@ dependencies:
     when: computername is defined
   - role: launchd
   - role: ssh_config
+  - role: fonts
   - role: terminal
   - role: slate
   - role: git
