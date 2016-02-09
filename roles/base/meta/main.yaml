@@ -5,8 +5,9 @@ dependencies:
   - role: computername
     when: computername is defined
   - role: launchd
-  - role: terminal
   - role: ssh_config
+  - role: terminal
+  - role: slate
   - role: git
   - role: vim
   - role: zsh

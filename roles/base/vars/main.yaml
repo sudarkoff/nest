@@ -22,7 +22,6 @@ brew_cask_apps:
   - omnifocus
   - rescuetime
   - slack
-  - slate
   - sonos
   - spotify
   - typinator
