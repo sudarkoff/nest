@@ -8,6 +8,7 @@ dependencies:
   - role: ssh_config
   - role: fonts
   - role: terminal
+  - role: apps
   - role: slate
   - role: git
   - role: vim
