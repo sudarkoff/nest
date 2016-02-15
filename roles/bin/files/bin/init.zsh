@@ -1,5 +1,5 @@
 # set the path
-export PATH=$PATH:$HOME/bin:$HOME/bin/$OSTYPE
+export PATH=$PATH:$HOME/bin:$HOME/bin/$OSTYPE:/usr/local/nest/config
 export SRC=$HOME/src
 
 # load zsh extensions
