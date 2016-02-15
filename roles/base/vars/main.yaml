@@ -15,6 +15,7 @@ brew_cask_apps:
   - alfred
   - dropbox
   - evernote
+  - gpgtools
   - flux
   - google-chrome
   - kaleidoscope
