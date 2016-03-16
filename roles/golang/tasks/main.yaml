@@ -1,4 +1,9 @@
 ---
+- name: install go
+  homebrew:
+    name: go
+    state: latest
+
 - name: create gopath directory
   file:
     path: ~/.gopath
