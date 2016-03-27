@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ldapsearch -b "ou=SurveyMonkey,dc=corp,dc=surveymonkey,dc=com" -h dc1-mp.corp.surveymonkey.com -p 3268 -D CORP\\$USER -W -s sub "(sAMAccountName=${0:-USER})"
