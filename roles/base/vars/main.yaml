@@ -30,5 +30,5 @@ brew_cask_apps:
   - typinator
   - vagrant
   - virtualbox
-  - dockertoolbox
+  - mactex
 
