@@ -1,8 +1,12 @@
 ---
 - name: install brew applications
-  homebrew: name={{item}} state=latest
+  homebrew:
+    name: "{{item}}"
+    state: latest
   with_items: "{{brew_apps}}"
 
-- name: install cask applications
-  homebrew_cask: name={{item}} state=present
+- name: install brew cask applications
+  homebrew_cask:
+    name: "{{item}}"
+    state: latest
   with_items: "{{brew_cask_apps}}"
