@@ -8,5 +8,5 @@
 - name: install brew cask applications
   homebrew_cask:
     name: "{{item}}"
-    state: latest
+    state: present
   with_items: "{{brew_cask_apps}}"
