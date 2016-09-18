@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>com.sudarkoff.nest.daily</string>
+	<string>com.sudarkoff.nest.hourly</string>
 	<key>ProgramArguments</key>
 	<array>
 		<string>/usr/local/nest/config/nest</string>
