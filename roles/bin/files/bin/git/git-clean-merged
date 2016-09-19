@@ -1,4 +1,5 @@
 #!/bin/bash
 
-# Remove local branches that have already been merged to master
-git branch --merged master | grep -v "\* master" | xargs -n 1 git branch -d
+# Remove local branches that have already been merged to $base HEAD
+base=${1:-master}
+git branch --merged $base | grep -v "[\*|$base|prod|canary]" | xargs -n 1 git branch -d
