@@ -1,4 +1,4 @@
-osx_defaults:
+my_osx_defaults:
   - domain: 'com.apple.dock'
     key: 'autohide'
     type: boolean
