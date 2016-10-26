@@ -176,4 +176,4 @@ if [ -f "config/requirements.yml" ]; then
 fi
 
 setStatusMessage "Running the playbook"
-ansible-playbook -i "localhost," $computername $extra_ansible_opts config/site.yaml
+ansible-playbook -i "localhost," $computername $extra_ansible_opts -vvvv config/site.yaml
