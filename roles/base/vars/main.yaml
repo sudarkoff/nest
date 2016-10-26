@@ -2,26 +2,27 @@
 username: "{{ lookup('env', 'USER') }}"
 
 brew_apps:
-  - keybase
-  - tmux
-  - the_silver_searcher
-  - jq
   - htop-osx
-  - nmap
   - irssi
+  - jq
+  - keybase
   - markdown
+  - nmap
   - pandoc
+  - the_silver_searcher
+  - tmux
 
 brew_cask_apps:
   - 1password
   - alfred
   - dropbox
   - evernote
-  - gpgtools
   - flux
   - google-chrome
+  - gpgtools
   - kaleidoscope
   - kindle
+  - mactex
   - omnifocus
   - rescuetime
   - slack
