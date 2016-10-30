@@ -11,6 +11,7 @@ brew_apps:
   - pandoc
   - the_silver_searcher
   - tmux
+  - mas
 
 brew_cask_apps:
   - 1password
