@@ -19,6 +19,7 @@ set gcr=a:blinkon0              "Disable cursor blink
 set visualbell                  "No sounds
 set autoread                    "Reload files changed outside vim
 set wrap                        "Wrap long lines by default
+set display+=lastline           "Display as much as possible of the last line
 
 " Use 'jj' typed in rapid succession to exit insert rmode
 imap jj <Esc>
