@@ -23,7 +23,6 @@ brew_cask_apps:
   - gpgtools
   - kaleidoscope
   - kindle
-  - mactex
   - omnifocus
   - rescuetime
   - slack
