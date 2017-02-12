@@ -127,7 +127,8 @@ if [ ! -f $SITE_YAML ]; then
   connection: local
 
   roles:
-    - role: base
+    - ignore_errors: 'yes'
+      role: base
 EOL
 fi
 setStatusMessage "Configured base playbook"
@@ -136,7 +137,8 @@ if [ ! -z "$role" ]; then
     # Add specified roles to site.yaml
     for r in $(echo $role | sed "s/,/ /g"); do
         cat >>$SITE_YAML <<EOL
-    - role: $r
+    - ignore_errors: 'yes'
+      role: $r
 EOL
     done
     setStatusMessage "Configured additional role(s): $role"
