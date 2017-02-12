@@ -47,11 +47,12 @@ WHITE        = "\033[1;37m"
 DEFAULT      = "\033[0m"
 
 tagColors = dict(list(TAG_COLORS.items()) + list({
-   "@meta":     LIGHT_GREY,
-   "@warn":     LIGHT_RED,
-   "@task":     LIGHT_GREEN,
-   "@talk":     LIGHT_BLUE,
-   "@project":  YELLOW,
+   "@next":   LIGHT_GREY,
+   "@status": LIGHT_BLUE,
+   "@win":    LIGHT_GREEN,
+   "@alert":  LIGHT_RED,
+   "@red":    LIGHT_RED,
+   "@warn":   YELLOW,
 }.items()))
 
 TAG_REGEX = r"(\@[0-9A-Za-z-_]+)(\:[0-9A-Za-z-_.]+)?\s+"
