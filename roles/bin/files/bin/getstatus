@@ -18,17 +18,14 @@ LOG_DATE_RANGE="$(date -v$DATE -v-4d +%Y-%m-%d)..$(date -v$DATE -v+2d +%Y-%m-%d)
 
 printf "Status for $(date -v$DATE -v-4d '+%B %d') -- $(date -v$DATE -v+2d '+%B %d')\n"
 
-printf "\n# Next Week\n\n"
-$LOG $LOG_OPTS list @next $LOG_DATE_RANGE | sed "s/^/ - /"
-
 printf "\n# This Week\n\n"
 $LOG $LOG_OPTS list @status $LOG_DATE_RANGE | sed "s/^/ - /"
+
+printf "\n# Wins\n\n"
+$LOG $LOG_OPTS list @win $LOG_DATE_RANGE | sed "s/^/ - /"
 
 printf "\n# Red Flags\n\n"
 $LOG $LOG_OPTS list @red $LOG_DATE_RANGE | sed "s/^/ - /"
 
-printf "\n# FYI\n\n"
-$LOG $LOG_OPTS list @fyi $LOG_DATE_RANGE | sed "s/^/ - /"
-
-printf "\n# Wins\n\n"
-$LOG $LOG_OPTS list @win $LOG_DATE_RANGE | sed "s/^/ - /"
+printf "\n# Next Week\n\n"
+$LOG $LOG_OPTS list @next $LOG_DATE_RANGE | sed "s/^/ - /"
