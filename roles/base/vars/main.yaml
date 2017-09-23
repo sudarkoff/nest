@@ -3,7 +3,6 @@ username: "{{ lookup('env', 'USER') }}"
 
 brew_apps:
   - htop-osx
-  - irssi
   - jq
   - markdown
   - nmap
@@ -23,7 +22,6 @@ brew_cask_apps:
   - kaleidoscope
   - kindle
   - omnifocus
-  - rescuetime
   - slack
   - spotify
   - typinator
