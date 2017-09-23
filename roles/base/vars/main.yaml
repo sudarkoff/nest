@@ -5,7 +5,6 @@ brew_apps:
   - htop-osx
   - irssi
   - jq
-  - keybase
   - markdown
   - nmap
   - pandoc
@@ -15,10 +14,10 @@ brew_apps:
 
 brew_cask_apps:
   - 1password
+  - keybase
   - alfred
   - dropbox
   - evernote
-  - flux
   - google-chrome
   - gpgtools
   - kaleidoscope
@@ -26,6 +25,5 @@ brew_cask_apps:
   - omnifocus
   - rescuetime
   - slack
-  - sonos
   - spotify
   - typinator
