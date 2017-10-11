@@ -12,7 +12,7 @@
 
   # log
   graph = log --graph --date=short
-  changes = log --pretty=format:\" * %s\" $(git describe --tags --abbrev=0)..HEAD
+  changes = log --pretty=format:\" * %s\" $1..HEAD
   short = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\"
   filelog = log -u                  # show changes to a file
 

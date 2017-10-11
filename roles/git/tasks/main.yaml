@@ -5,11 +5,11 @@
     - git
     - git-extras
 
-- name: put up a gitconfig
-  become: yes
-  copy:
-    src: "gitconfig"
-    dest: "/etc/gitconfig"
+#- name: put up a gitconfig
+#  become: yes
+#  copy:
+#    src: "gitconfig"
+#    dest: "/etc/gitconfig"
 
 - name: put up a gitconfig
   copy:
