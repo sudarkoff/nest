@@ -1,4 +1,5 @@
 alias llog='$HOME/bin/log'
+alias jb='ssh jumpbox.jungle.tech'
 
 if [ "$DROPBOX$" = "$" ]; then
   export DROPBOX=$HOME/Dropbox
