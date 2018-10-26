@@ -23,7 +23,10 @@ LOG_FILE = "%s/log.txt" % (os.environ.get("HOME"))
 
 # Load local configuration from ~/.log.py
 CONFIG_FILE="%s/.log.py" % (os.environ.get("HOME"))
-execfile(CONFIG_FILE)
+try:
+    execfile(CONFIG_FILE)
+except:
+    pass
 
 # Colors for common tags.
 # Unrecognized tags will be printed with WHITE color.
