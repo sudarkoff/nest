@@ -6,14 +6,13 @@
 
 - name: create gopath directory
   file:
-    path: "~/src/{{ item }}"
+    path: "~/{{ item }}"
     state: directory
     mode: 0755
   with_items:
-    - go
-    - go/src
-    - go/pkg
-    - go/bin
+    - src
+    - pkg
+    - bin
 
 - name: touch golang.zsh
   file:
@@ -23,7 +22,7 @@
 - name: create golang.zsh
   copy:
     content: |
-        export GOPATH=~/src/go
+        export GOPATH=$HOME
         export GOROOT=/usr/local/opt/go/libexec
         export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
     dest: ~/bin/zsh/golang.zsh
