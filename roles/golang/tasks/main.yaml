@@ -23,6 +23,7 @@
   copy:
     content: |
         export GOPATH=$HOME
+        export GOBIN=$GOPATH/bin
         export GOROOT=/usr/local/opt/go/libexec
-        export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
+        export PATH=$PATH:$GOBIN:$GOROOT/bin
     dest: ~/bin/zsh/golang.zsh
