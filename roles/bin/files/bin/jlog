@@ -9,7 +9,7 @@ __copyright__ = "Copyright (c) 2008-2012, George Sudarkoff"
 __license__ = "New BSD license, http://www.opensource.org/licenses/bsd-license.php"
 __version__ = "1.0"
 
-import os, sys, re, time
+import os, sys, re, time, subprocess
 from datetime import date, datetime, timedelta
 from optparse import OptionParser
 
@@ -258,6 +258,19 @@ class Log(object):
               pass
           print "\t%s%s%s" % (COLOR, key, DEFAULT)
 
+class DayOneLog(Log):
+   def addAction(self, message, tags=''):
+      """Add new log record."""
+      subprocess.call([
+          'dayone2',
+          '--journal=Log',
+          '--tags',
+          'log %s' % tags,
+          '--',
+          'new',
+          '%s' % message
+          ])
+
 if __name__ == "__main__":
-   log = Log()
+   log = DayOneLog()
 
