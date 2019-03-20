@@ -24,6 +24,9 @@ Bundle "pangloss/vim-javascript"
 Bundle "othree/javascript-libraries-syntax.vim"
 Bundle "chase/vim-ansible-yaml"
 
+" GoLang
+Plugin "fatih/vim-go"
+
 " Markdown...
 Bundle "jtratner/vim-flavored-markdown.git"
 Bundle "nelstrom/vim-markdown-preview"
