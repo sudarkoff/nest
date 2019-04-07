@@ -2,7 +2,6 @@
 username: "{{ lookup('env', 'USER') }}"
 
 brew_apps:
-  - htop-osx
   - jq
   - markdown
   - nmap
@@ -13,15 +12,14 @@ brew_apps:
 
 brew_cask_apps:
   - 1password
-  - keybase
+  #- keybase
   - alfred
-  - dropbox
   - evernote
   - google-chrome
-  - gpgtools
+  #- gpgtools
   - kaleidoscope
   - kindle
-  - omnifocus
+  #- omnifocus
   - slack
   - spotify
   - typinator

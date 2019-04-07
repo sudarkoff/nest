@@ -113,8 +113,8 @@ fi
 setStatusMessage "Create necessary folders"
 sudo mkdir -p /usr/local/nest
 sudo mkdir -p /usr/local/nest/roles
-sudo chmod -R g+rwx /usr/local
-sudo chgrp -R admin /usr/local
+#sudo chmod -R g+rwx /usr/local
+#sudo chgrp -R admin /usr/local
 
 if [ ! -f $SITE_YAML ]; then
     # Create base site.yaml
@@ -170,7 +170,7 @@ fi
 cd /usr/local/nest
 
 setStatusMessage "Create ansible.cfg"
-{ echo '[defaults]'; echo 'roles_path=/usr/local/nest/roles:/usr/local/nest/config/roles'; } > ansible.cfg
+{ echo '[defaults]'; echo 'roles_path=/usr/local/nest/roles:/usr/local/nest/config/roles'; echo 'log_path=/var/log/ansible.log'; } > ansible.cfg
 
 if [ -f "config/requirements.yml" ]; then
     setStatusMessage "Getting external roles"
@@ -178,4 +178,4 @@ if [ -f "config/requirements.yml" ]; then
 fi
 
 setStatusMessage "Running the playbook"
-ansible-playbook -i "localhost," $computername $extra_ansible_opts -vvvv config/site.yaml
+ansible-playbook -i "localhost," $computername $extra_ansible_opts config/site.yaml
