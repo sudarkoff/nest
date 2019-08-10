@@ -113,6 +113,7 @@ fi
 setStatusMessage "Create necessary folders"
 sudo mkdir -p /usr/local/nest
 sudo mkdir -p /usr/local/nest/roles
+sudo mkdir -p /usr/local/nest/config
 sudo chmod -R g+rwx /usr/local/nest
 sudo chgrp -R admin /usr/local/nest
 
