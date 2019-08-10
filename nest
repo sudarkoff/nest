@@ -129,7 +129,7 @@ if [ -z "$branch" ]; then
 fi
 setStatusMessage "Selected branch: $branch"
 
-if [ -d "/usr/local/nest/config/roles" ]; then
+if [ -d "/usr/local/nest/config/roles/base" ]; then
     echo $branch > /usr/local/nest/config/branch
 
     setStatusMessage "Update your config from git"
