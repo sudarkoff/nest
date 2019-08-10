@@ -6,13 +6,7 @@
 $ curl -s https://raw.githubusercontent.com/sudarkoff/nest/master/nest | bash
 ```
 
-Once `nest` is installed you can execute it with some additional parameters. To change the role:
-
-```
-$ /usr/local/nest/config/nest -r base
-```
-
-To change the branch:
+Once `nest` is installed you can execute it with some additional parameters. To change the branch:
 
 ```
 $ /usr/local/nest/config/nest -b develop
