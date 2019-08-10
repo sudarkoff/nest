@@ -10,7 +10,7 @@
     path: "/Users/{{ username }}/{{ item }}"
     mode: "u+x"
   with_items:
-    - bin/log
+    - bin/jlog
     - bin/pmake
     - bin/flush-dns
 
