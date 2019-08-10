@@ -112,7 +112,6 @@ fi
 
 setStatusMessage "Create necessary folders"
 sudo mkdir -p /usr/local/nest
-sudo mkdir -p /usr/local/nest/roles
 sudo mkdir -p /usr/local/nest/config
 sudo chmod -R g+rwx /usr/local/nest
 sudo chgrp -R admin /usr/local/nest
@@ -130,7 +129,7 @@ if [ -z "$branch" ]; then
 fi
 setStatusMessage "Selected branch: $branch"
 
-if [ -d "/usr/local/nest/config" ]; then
+if [ -d "/usr/local/nest/config/roles" ]; then
     echo $branch > /usr/local/nest/config/branch
 
     setStatusMessage "Update your config from git"
