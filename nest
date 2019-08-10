@@ -87,7 +87,7 @@ function install_clt {
     fi
 }
 
-setStatusMessage "Checking if we need to ask for a sudo password"
+setStatusMessage "Check if we need to ask for a sudo password"
 sudo -v
 
 setStatusMessage "Keep-alive: update existing sudo time stamp until we are finished"
@@ -127,9 +127,12 @@ if [ -z "$branch" ]; then
         branch="master"
     fi
 fi
-setStatusMessage "Selected branch: $branch"
+setStatusMessage "Select branch: $branch"
 
-if [ -d "/usr/local/nest/config/roles/base" ]; then
+if [[ ! -f "/usr/local/nest/config/nest" ]]; then
+    setStatusMessage "Clone your config for the first time"
+    git clone -q -b $branch https://github.com/sudarkoff/nest.git /usr/local/nest/config
+else
     echo $branch > /usr/local/nest/config/branch
 
     setStatusMessage "Update your config from git"
@@ -138,9 +141,6 @@ if [ -d "/usr/local/nest/config/roles/base" ]; then
     git fetch -q
     git checkout $branch --force
     git reset --hard origin/$branch
-else
-    setStatusMessage "Getting the nest config"
-    git clone -q -b $branch https://github.com/sudarkoff/nest.git /usr/local/nest/config
 fi
 
 cd /usr/local/nest
@@ -149,10 +149,11 @@ setStatusMessage "Create ansible.cfg"
 { echo '[defaults]'; echo 'roles_path=/usr/local/nest/roles:/usr/local/nest/config/roles'; echo 'log_path=/var/log/ansible.log'; } > ansible.cfg
 
 if [ -f "config/requirements.yml" ]; then
-    setStatusMessage "Getting external roles"
+    setStatusMessage "Get external roles from Ansible Galaxy"
     ansible-galaxy install -f -r config/requirements.yml -p roles
 fi
 
+setStatusMessage "Generate the playbook"
 if [ ! -f $SITE_YAML ]; then
     # Create base site.yaml
     cat >$SITE_YAML <<EOL
@@ -168,8 +169,8 @@ if [ ! -f $SITE_YAML ]; then
       role: base
 EOL
 fi
-setStatusMessage "Configured base playbook"
 
+setStatusMessage "Add roles specified on the command line to the playbook"
 if [ ! -z "$role" ]; then
     # Add specified roles to site.yaml
     for r in $(echo $role | sed "s/,/ /g"); do
@@ -178,8 +179,7 @@ if [ ! -z "$role" ]; then
       role: $r
 EOL
     done
-    setStatusMessage "Configured additional role(s): $role"
 fi
 
-setStatusMessage "Running the playbook"
+setStatusMessage "Run the playbook"
 ansible-playbook -i "localhost," $computername $extra_ansible_opts config/site.yaml
