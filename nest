@@ -117,34 +117,6 @@ sudo mkdir -p /usr/local/nest/config
 sudo chmod -R g+rwx /usr/local/nest
 sudo chgrp -R admin /usr/local/nest
 
-if [ ! -f $SITE_YAML ]; then
-    # Create base site.yaml
-    cat >$SITE_YAML <<EOL
-#
-# Generated on $(date -u +"%Y-%m-%dT%H:%M:%SZ")
-#
----
-- hosts: 127.0.0.1
-  connection: local
-
-  roles:
-    - ignore_errors: 'yes'
-      role: base
-EOL
-fi
-setStatusMessage "Configured base playbook"
-
-if [ ! -z "$role" ]; then
-    # Add specified roles to site.yaml
-    for r in $(echo $role | sed "s/,/ /g"); do
-        cat >>$SITE_YAML <<EOL
-    - ignore_errors: 'yes'
-      role: $r
-EOL
-    done
-    setStatusMessage "Configured additional role(s): $role"
-fi
-
 if [ -z "$branch" ]; then
     if [ -f "/usr/local/nest/config/branch" ]; then
         branch=$(cat /usr/local/nest/config/branch)
@@ -176,6 +148,34 @@ setStatusMessage "Create ansible.cfg"
 if [ -f "config/requirements.yml" ]; then
     setStatusMessage "Getting external roles"
     ansible-galaxy install -f -r config/requirements.yml -p roles
+fi
+
+if [ ! -f $SITE_YAML ]; then
+    # Create base site.yaml
+    cat >$SITE_YAML <<EOL
+#
+# Generated on $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+#
+---
+- hosts: 127.0.0.1
+  connection: local
+
+  roles:
+    - ignore_errors: 'yes'
+      role: base
+EOL
+fi
+setStatusMessage "Configured base playbook"
+
+if [ ! -z "$role" ]; then
+    # Add specified roles to site.yaml
+    for r in $(echo $role | sed "s/,/ /g"); do
+        cat >>$SITE_YAML <<EOL
+    - ignore_errors: 'yes'
+      role: $r
+EOL
+    done
+    setStatusMessage "Configured additional role(s): $role"
 fi
 
 setStatusMessage "Running the playbook"
