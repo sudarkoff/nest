@@ -113,8 +113,8 @@ fi
 setStatusMessage "Create necessary folders"
 sudo mkdir -p /usr/local/nest
 sudo mkdir -p /usr/local/nest/roles
-#sudo chmod -R g+rwx /usr/local
-#sudo chgrp -R admin /usr/local
+sudo chmod -R g+rwx /usr/local/nest
+sudo chgrp -R admin /usr/local/nest
 
 if [ ! -f $SITE_YAML ]; then
     # Create base site.yaml
