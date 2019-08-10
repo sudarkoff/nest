@@ -117,6 +117,10 @@ sudo mkdir -p /usr/local/nest/config
 sudo chmod -R g+rwx /usr/local/nest
 sudo chgrp -R admin /usr/local/nest
 
+sudo touch /var/log/ansible.log
+sudo chmod g+rw /var/log/ansible.log
+sudo chgrp admin /var/log/ansible.log
+
 if [ -z "$branch" ]; then
     if [ -f "/usr/local/nest/config/branch" ]; then
         branch=$(cat /usr/local/nest/config/branch)
