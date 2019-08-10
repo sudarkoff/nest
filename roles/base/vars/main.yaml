@@ -12,7 +12,6 @@ brew_cask_apps:
   - keybase
   - alfred
   - google-chrome
-  - gpgtools
   - kaleidoscope
   - kindle
   - slack
