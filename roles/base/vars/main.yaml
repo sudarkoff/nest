@@ -12,6 +12,7 @@ brew_cask_apps:
   - keybase
   - alfred
   - google-chrome
+  - google-backup-and-sync
   - kaleidoscope
   - kindle
   - slack
