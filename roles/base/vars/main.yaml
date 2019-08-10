@@ -3,23 +3,18 @@ username: "{{ lookup('env', 'USER') }}"
 
 brew_apps:
   - jq
-  - markdown
   - nmap
-  - pandoc
   - the_silver_searcher
   - tmux
-  - mas
 
 brew_cask_apps:
   - 1password
-  #- keybase
+  - keybase
   - alfred
-  - evernote
   - google-chrome
-  #- gpgtools
+  - gpgtools
   - kaleidoscope
   - kindle
-  #- omnifocus
   - slack
   - spotify
   - typinator
