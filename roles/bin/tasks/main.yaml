@@ -12,7 +12,6 @@
   with_items:
     - bin/jlog
     - bin/pmake
-    - bin/flush-dns
 
 - name: make git scripts executable
   file:
