@@ -1,8 +1,8 @@
 ---
 - name: install zsh
-  homebrew: name={{item}} state=latest
-  with_items:
-    - zsh
+  homebrew:
+    name: zsh
+    state: latest
 
 - name: install prezto
   git: repo=https://github.com/sorin-ionescu/prezto.git dest=~/.zprezto recursive=yes force=yes

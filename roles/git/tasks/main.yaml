@@ -1,15 +1,10 @@
 ---
 - name: install dependencies
-  homebrew: name={{item}} state=latest
-  with_items:
-    - git
-    - git-extras
-
-#- name: put up a gitconfig
-#  become: yes
-#  copy:
-#    src: "gitconfig"
-#    dest: "/etc/gitconfig"
+  homebrew:
+    name:
+      - git
+      - git-extras
+    state: latest
 
 - name: put up a gitconfig
   copy:
