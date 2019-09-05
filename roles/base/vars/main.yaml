@@ -18,3 +18,4 @@ brew_cask_apps:
   - slack
   - spotify
   - typinator
+  - inkscape
