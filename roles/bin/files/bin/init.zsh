@@ -1,5 +1,5 @@
 # set the path
-export PATH=$PATH:$HOME/bin:$HOME/bin/$OSTYPE:~/Library/Python/2.7/bin/:/usr/local/nest/config
+export PATH=$PATH:$HOME/bin:$HOME/bin/$OSTYPE:/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/:/usr/local/nest/config
 export SRC=$HOME/src
 
 # load zsh extensions
