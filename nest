@@ -165,8 +165,7 @@ if [ ! -f $SITE_YAML ]; then
   connection: local
 
   roles:
-    - ignore_errors: 'yes'
-      role: base
+    - role: base
 EOL
 fi
 
@@ -175,7 +174,6 @@ if [ ! -z "$role" ]; then
     # Add specified roles to site.yaml
     for r in $(echo $role | sed "s/,/ /g"); do
         cat >>$SITE_YAML <<EOL
-    - ignore_errors: 'yes'
       role: $r
 EOL
     done
