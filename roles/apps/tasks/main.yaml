@@ -3,9 +3,3 @@
   homebrew:
     name: "{{brew_apps}}"
     state: latest
-
-- name: install brew cask applications
-  homebrew_cask:
-    name: "{{item}}"
-    state: present
-  with_items: "{{brew_cask_apps}}"

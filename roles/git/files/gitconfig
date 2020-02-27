@@ -1,6 +1,6 @@
 [core]
   autocrlf = false
-  editor = vim
+  editor = code
   excludesfile = ~/.gitignore
 
 [alias]
