@@ -9,7 +9,6 @@ dependencies:
   - role: fonts
   - role: terminal
   - role: apps
-  - role: slate
   - role: git
   - role: zsh
   - role: bin

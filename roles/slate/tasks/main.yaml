@@ -1,5 +1,0 @@
----
-- name: copy the config file
-  copy:
-    src: files/slate
-    dest: ~/.slate
