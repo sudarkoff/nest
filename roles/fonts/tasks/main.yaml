@@ -1,7 +1,0 @@
----
-- name: install fonts
-  copy:
-    src: "{{ item }}"
-    dest: "/Users/{{ username }}/Library/Fonts/"
-  with_fileglob:
-    - files/*.otf

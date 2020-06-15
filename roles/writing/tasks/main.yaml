@@ -1,6 +1,0 @@
----
-- name: Install proselint
-  pip:
-    name: proselint
-    state: latest
-  become: yes

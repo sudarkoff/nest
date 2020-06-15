@@ -1,5 +1,0 @@
----
-- name: install brew applications
-  homebrew:
-    name: "{{brew_apps}}"
-    state: latest

@@ -1,8 +1,0 @@
----
-username: "{{ lookup('env', 'USER') }}"
-
-brew_apps:
-  - jq
-  - nmap
-  - the_silver_searcher
-  - tmux

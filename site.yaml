@@ -1,0 +1,358 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+  vars:
+    username: "{{ lookup('env', 'USER') }}"
+
+    brew_apps:
+      - jq
+      - the_silver_searcher
+      - tmux
+
+    my_osx_defaults:
+      - domain: 'com.apple.dock'
+        key: 'autohide'
+        type: boolean
+        value: "true"
+      - domain: 'com.apple.dock'
+        key: 'minimize-to-application'
+        type: integer
+        value: 1
+      - domain: 'com.apple.dock'
+        key: 'show-process-indicators'
+        type: boolean
+        value: "true"
+      - domain: 'com.apple.dock'
+        key: 'orientation'
+        type: string
+        value: bottom
+      - domain: 'NSGlobalDomain'
+        key: 'NSTableViewDefaultSizeMode'
+        type: integer
+        value: 1
+      - domain: 'com.apple.screencapture'
+        key: 'type'
+        type: string
+        value: png
+      - domain: 'NSGlobalDomain'
+        key: 'KeyRepeat'
+        type: integer
+        value: 2
+      - domain: 'NSGlobalDomain'
+        key: 'InitialKeyRepeat'
+        type: integer
+        value: 15
+      - domain: 'com.apple.menuextra.clock'
+        key: 'DateFormat'
+        type: string
+        value: EEE MMM d  HH:mm
+      - domain: 'com.apple.menuextra.battery'
+        key: 'ShowPercent'
+        type: string
+        value: 'YES'
+      - domain: 'com.apple.finder'
+        key: 'FXPreferredViewStyle'
+        type: string
+        value: "clmv"
+      - domain: 'NSGlobalDomain'
+        key: 'NSNavPanelExpandedStateForSaveMode'
+        type: boolean
+        value: "true"
+      - domain: 'NSGlobalDomain'
+        key: 'PMPrintingExpandedStateForPrint'
+        type: boolean
+        value: "true"
+      - domain: 'com.apple.dock'
+        key: 'tilesize'
+        type: float
+        value: 32
+      - domain: 'com.apple.dock'
+        key: 'autohide-time-modifier'
+        type: int
+        value: 0
+      - domain: 'com.apple.dock'
+        key: 'autohide-delay'
+        type: int
+        value: 0
+      - domain: 'NSGlobalDomain'
+        key: 'NSQuitAlwaysKeepsWindows'
+        type: boolean
+        value: "false"
+      - domain: 'NSGlobalDomain'
+        key: 'ApplePressAndHoldEnabled'
+        type: boolean
+        value: "false"
+      - domain: 'com.apple.desktopservices'
+        key: 'DSDontWriteNetworkStores'
+        type: boolean
+        value: "true"
+      - domain: 'com.apple.print.PrintingPrefs'
+        key: 'Quit When Finished'
+        type: boolean
+        value: "true"
+      - domain: 'com.apple.Safari'
+        key: 'IncludeInternalDebugMenu'
+        type: boolean
+        value: "true"
+      - domain: 'com.apple.Safari'
+        key: 'IncludeDevelopMenu'
+        type: boolean
+        value: "true"
+      - domain: 'com.apple.Safari'
+        key: 'WebKitDeveloperExtrasEnabledPreferenceKey'
+        type: boolean
+        value: "true"
+      - domain: 'com.apple.Safari'
+        key: 'com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled'
+        type: boolean
+        value: "true"
+      - domain: 'NSGlobalDomain'
+        key: 'WebKitDeveloperExtras'
+        type: boolean
+        value: "true"
+
+
+
+  tasks:
+    # sudoers
+    - name: add to sudoers without password
+      become: yes
+      lineinfile: >
+        dest=/etc/sudoers
+        regexp="{{ item.regexp }}"
+        line="{{ item.line }}"
+        state=present
+        backrefs=yes
+        create=true
+      with_items:
+        - { regexp: '%admin\s+ALL=\(ALL\)\s+ALL', line: '%admin\tALL=(ALL) NOPASSWD: ALL' }
+
+    # osx defaults
+    - osx_defaults:
+        domain: "{{ item.domain }}"
+        key: "{{ item.key }}"
+        type: "{{ item.type }}"
+        value: "{{ item.value }}"
+        state: present
+      with_items: "{{ my_osx_defaults }}"
+
+    # ssh
+    - name: create ssh directory
+      become: yes
+      file:
+        path: "{{item}}"
+        state: directory
+        owner: root
+        group: wheel
+        mode: 0777
+      with_items:
+        - /etc/ssh
+
+    - name: ssh config
+      become: yes
+      copy:
+        src: ssh_config
+        dest: /etc/ssh_config
+
+    - name: ssh config in another location
+      become: yes
+      copy:
+        src: ssh_config
+        dest: /etc/ssh/ssh_config
+
+    # fonts
+    - name: install fonts
+      copy:
+        src: "{{ item }}"
+        dest: "/Users/{{ username }}/Library/Fonts/"
+      with_fileglob:
+        - files/*.otf
+
+    # terminal theme
+    - name: register the current terminal profile
+      shell: defaults read "com.apple.Terminal" "Default Window Settings"
+      register: terminal_profile_result
+      changed_when: False
+
+    - name: store the terminal profile in /tmp
+      copy:
+        src: "homebrew-andale-mono24.256.terminal"
+        dest: "/tmp/homebrew-andale-mono24.256.terminal"
+      when: terminal_profile_result.stdout != "homebrew-andale-mono24.256"
+
+    - name: install the terminal profile
+      shell: open /tmp/homebrew-andale-mono24.256.terminal
+      when: terminal_profile_result.stdout != "homebrew-andale-mono24.256"
+
+    - name: set the Default Window Settings
+      osx_defaults:
+        domain: com.apple.Terminal
+        key: Default Window Settings
+        type: string
+        value: "homebrew-andale-mono24.256"
+        state: present
+
+    - name: set the Startup Window Settings
+      osx_defaults:
+        domain: com.apple.Terminal
+        key: Startup Window Settings
+        type: string
+        value: "homebrew-andale-mono24.256"
+        state: present
+
+    # homebrew
+    - name: set permissions
+      file: path={{item}} state=directory recurse=yes owner={{username}} group="admin"
+      with_items:
+        - /usr/local/bin
+        - /usr/local/share
+        - /usr/local/man
+        - /usr/local/man/man1
+      become: yes
+
+    - name: install homebrew via the curl oneliner
+      shell: ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+      args:
+        creates: /usr/local/bin/brew
+
+    - name: update and upgrade homebrew
+      homebrew: update_homebrew=yes upgrade_all=yes
+
+    - name: install homebrew services
+      homebrew_tap: tap=homebrew/services state=present
+
+    # homebrew apps
+    - name: install brew applications
+      homebrew:
+        name: "{{brew_apps}}"
+        state: latest
+
+    # git
+    - name: install dependencies
+      homebrew:
+        name:
+          - git
+          - git-extras
+        state: latest
+
+    - name: put up a gitconfig
+      copy:
+        src: "gitconfig"
+        dest: "/usr/local/etc/gitconfig"
+
+    # zsh
+    - name: install zsh
+      homebrew:
+        name: zsh
+        state: latest
+
+    - name: install prezto
+      git: repo=https://github.com/sorin-ionescu/prezto.git dest=~/.zprezto recursive=yes force=yes
+
+    - name: install .z files
+      file: src=~/.zprezto/runcoms/{{item}} dest=~/.{{item}} state=link
+      with_items:
+        - zshenv
+        - zprofile
+        - zshrc
+        - zlogin
+        - zlogout
+
+    - name: install .zpreztorc
+      copy: src=~/.zprezto/runcoms/zpreztorc dest=~/.zpreztorc force=yes
+
+    - set_fact:
+        custom_prezto_modules:
+          - dirmark
+          - homebin
+        standard_prezto_modules:
+          - git
+          - osx
+          - syntax-highlighting
+          - history-substring-search
+          - ssh
+
+    - set_fact:
+        prezto_modules:
+          "{{ custom_prezto_modules + standard_prezto_modules }}"
+
+    - name: install custom prezto modules
+      copy: src=modules/{{item}} dest=~/.zprezto/modules force=yes
+      with_items: "{{custom_prezto_modules}}"
+
+    - name: add prezto modules to .zpreztorc
+      lineinfile: "dest=~/.zpreztorc insertbefore=\"^  'prompt'\" line=\"  '{{item}}' \\ \""
+      with_items: "{{prezto_modules}}"
+
+    - name: remove trailing spaces
+      replace: dest=~/.zpreztorc regexp="\s*$"
+
+    - name: install custom theme
+      copy: src=themes/prompt_sudarkoff_setup dest=~/.zprezto/modules/prompt/functions/
+
+    - name: configure custom prompt
+      lineinfile: >
+        dest=~/.zpreztorc
+        regexp="{{ item.regexp }}"
+        line="{{ item.line }}"
+        state=present
+        backrefs=yes
+        create=true
+      with_items:
+        - { regexp: "zstyle ':prezto:module:prompt' theme 'sorin'", line: "zstyle ':prezto:module:prompt' theme 'sudarkoff'" }
+
+    - name: change shell to zsh
+      command: chsh -s /bin/zsh {{username}}
+      become: yes
+
+    # bin
+    - name: create ~/bin
+      copy:
+        src: bin/
+        dest: "/Users/{{ username }}/bin"
+        owner: "{{ username }}"
+
+    - name: make certain ~/bin scripts executable
+      file:
+        path: "/Users/{{ username }}/{{ item }}"
+        mode: "u+x"
+      with_items:
+        - bin/jlog
+        - bin/pmake
+
+    - name: make git scripts executable
+      file:
+        path: "/Users/{{ username }}/bin/git/{{ item | basename }}"
+        mode: "u+x"
+      with_fileglob:
+        - bin/git/git-*
+
+    # golang
+    - name: install go
+      homebrew:
+        name: go
+        state: latest
+
+    - name: create gopath directory
+      file:
+        path: "~/{{ item }}"
+        state: directory
+        mode: 0755
+      with_items:
+        - src
+        - pkg
+        - bin
+
+    - name: touch golang.zsh
+      file:
+        path: ~/bin/zsh/golang.zsh
+        state: touch
+
+    - name: create golang.zsh
+      copy:
+        content: |
+            export GOPATH=$HOME
+            export GOBIN=$GOPATH/bin
+            export GOROOT=/usr/local/opt/go/libexec
+            export PATH=$PATH:$GOBIN:$GOROOT/bin
+        dest: ~/bin/zsh/golang.zsh

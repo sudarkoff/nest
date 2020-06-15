@@ -2,32 +2,7 @@
 
 PATH=/bin:/usr/bin:/usr/sbin:/usr/local/bin
 
-SITE_YAML=/usr/local/nest/config/site.yaml
-
-while [[ $# > 1 ]]; do
-    opt="$1"
-    case $opt in
-        -r|--role)
-            role="$2"
-            shift
-            ;;
-        -b|--branch)
-            branch="$2"
-            shift
-            ;;
-        -n|--computer-name)
-            computername="-e computername='$2'"
-            shift
-            ;;
-        -e|--extra)
-            extra_ansible_opts="$2"
-            shift
-            ;;
-        *)
-            ;;
-    esac
-    shift
-done
+SITE_YAML=/usr/local/nest/site.yaml
 
 green='\e[1;32m'  # green
 red='\e[1;31m'    # red
@@ -109,73 +84,12 @@ if ! exists ansible; then
 fi
 
 setStatusMessage "Create necessary folders"
-sudo mkdir -p /usr/local/nest
-sudo mkdir -p /usr/local/nest/config
-sudo chmod -R g+rwx /usr/local/nest
-sudo chgrp -R admin /usr/local/nest
-
 sudo touch /var/log/ansible.log
 sudo chmod g+rw /var/log/ansible.log
 sudo chgrp admin /var/log/ansible.log
 
-if [ -z "$branch" ]; then
-    if [ -f "/usr/local/nest/config/branch" ]; then
-        branch=$(cat /usr/local/nest/config/branch)
-    else
-        branch="master"
-    fi
-fi
-setStatusMessage "Select branch: $branch"
-
-if [[ ! -f "/usr/local/nest/config/nest" ]]; then
-    setStatusMessage "Clone your config for the first time"
-    git clone -q -b $branch https://github.com/sudarkoff/nest.git /usr/local/nest/config
-else
-    echo $branch > /usr/local/nest/config/branch
-
-    setStatusMessage "Update your config from git"
-    cd /usr/local/nest/config
-
-    git fetch -q
-    git checkout $branch --force
-    git reset --hard origin/$branch
-fi
-
-cd /usr/local/nest
-
 setStatusMessage "Create ansible.cfg"
 { echo '[defaults]'; echo 'roles_path=/usr/local/nest/roles:/usr/local/nest/config/roles'; echo 'log_path=/var/log/ansible.log'; } > ansible.cfg
 
-if [ -f "config/requirements.yml" ]; then
-    setStatusMessage "Get external roles from Ansible Galaxy"
-    ansible-galaxy install -f -r config/requirements.yml -p roles
-fi
-
-setStatusMessage "Generate the playbook"
-if [ ! -f $SITE_YAML ]; then
-    # Create base site.yaml
-    cat >$SITE_YAML <<EOL
-#
-# Generated on $(date -u +"%Y-%m-%dT%H:%M:%SZ")
-#
----
-- hosts: 127.0.0.1
-  connection: local
-
-  roles:
-    - role: base
-EOL
-fi
-
-setStatusMessage "Add roles specified on the command line to the playbook"
-if [ ! -z "$role" ]; then
-    # Add specified roles to site.yaml
-    for r in $(echo $role | sed "s/,/ /g"); do
-        cat >>$SITE_YAML <<EOL
-      role: $r
-EOL
-    done
-fi
-
 setStatusMessage "Run the playbook"
-ansible-playbook -i "localhost," $computername $extra_ansible_opts config/site.yaml
+ansible-playbook -i "localhost," site.yaml
