@@ -15,7 +15,7 @@ install:
 
 script:
   # Test ansible syntax
-  - ansible-playbook -i inventory test.yml --syntax-check
+  - ansible-playbook -i inventory site.yaml --syntax-check
 
   # Run the playbook with ansible-playbook.
   #- ansible-playbook -i inventory test.yml --connection=local --sudo
