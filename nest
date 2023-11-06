@@ -74,19 +74,19 @@ if [[ ! -f "/Library/Developer/CommandLineTools/usr/bin/clang" ]]; then
     install_clt
 fi
 
-if ! exists pip; then
-    setStatusMessage "Install PIP"
-    sudo easy_install --quiet pip
-fi
 if ! exists ansible; then
     setStatusMessage "Install Ansible"
-    sudo pip install -q ansible
+    sudo pip3 install -q ansible
 fi
 
 setStatusMessage "Create necessary folders"
 sudo touch /var/log/ansible.log
 sudo chmod g+rw /var/log/ansible.log
 sudo chgrp admin /var/log/ansible.log
+
+sudo mkdir -p /usr/local/etc
+sudo chmod g+rw /usr/local/etc
+sudo chgrp admin /usr/local/etc
 
 setStatusMessage "Create ansible.cfg"
 { echo '[defaults]'; echo 'roles_path=/usr/local/nest/roles:/usr/local/nest/config/roles'; echo 'log_path=/var/log/ansible.log'; } > ansible.cfg

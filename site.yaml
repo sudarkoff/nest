@@ -90,22 +90,6 @@
         key: 'Quit When Finished'
         type: boolean
         value: "true"
-      - domain: 'com.apple.Safari'
-        key: 'IncludeInternalDebugMenu'
-        type: boolean
-        value: "true"
-      - domain: 'com.apple.Safari'
-        key: 'IncludeDevelopMenu'
-        type: boolean
-        value: "true"
-      - domain: 'com.apple.Safari'
-        key: 'WebKitDeveloperExtrasEnabledPreferenceKey'
-        type: boolean
-        value: "true"
-      - domain: 'com.apple.Safari'
-        key: 'com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled'
-        type: boolean
-        value: "true"
       - domain: 'NSGlobalDomain'
         key: 'WebKitDeveloperExtras'
         type: boolean
@@ -211,7 +195,7 @@
       become: yes
 
     - name: install homebrew via the curl oneliner
-      shell: ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+      shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       args:
         creates: /usr/local/bin/brew
 
@@ -326,33 +310,3 @@
         mode: "u+x"
       with_fileglob:
         - bin/git/git-*
-
-    # golang
-    - name: install go
-      homebrew:
-        name: go
-        state: latest
-
-    - name: create gopath directory
-      file:
-        path: "~/{{ item }}"
-        state: directory
-        mode: 0755
-      with_items:
-        - src
-        - pkg
-        - bin
-
-    - name: touch golang.zsh
-      file:
-        path: ~/bin/zsh/golang.zsh
-        state: touch
-
-    - name: create golang.zsh
-      copy:
-        content: |
-            export GOPATH=$HOME
-            export GOBIN=$GOPATH/bin
-            export GOROOT=/usr/local/opt/go/libexec
-            export PATH=$PATH:$GOBIN:$GOROOT/bin
-        dest: ~/bin/zsh/golang.zsh
